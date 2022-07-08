@@ -2,6 +2,7 @@ package com.api.helper;
 
 import com.api.entity.Altas;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -42,6 +43,7 @@ public class Helper {
 			
 			try (XSSFWorkbook workbook = new XSSFWorkbook(is)) {
 				XSSFSheet sheet = workbook.getSheet("data");
+				DataFormatter formatter = new DataFormatter();
 
 				int rowNumber = 0;
 				Iterator<Row> iterator = sheet.iterator();

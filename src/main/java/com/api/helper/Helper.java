@@ -4,18 +4,21 @@ import com.api.entity.Altas;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class Helper {
-	//*
-	
+	// *
+
 	// Verificacion formato de archivo
 
 	public static boolean checkExcelFormat(MultipartFile file) {
@@ -35,65 +38,66 @@ public class Helper {
 	public static List<Altas> convertExcelToListOfAltas(InputStream is) {
 		List<Altas> list = new ArrayList<>();
 		
-		System.out.println(0); 
 		
-		
+		String base = "";
 		
 		try {
 			
-			try (XSSFWorkbook workbook = new XSSFWorkbook(is)) {
-				XSSFSheet sheet = workbook.getSheet("data");
-				DataFormatter formatter = new DataFormatter();
+			
+			//FileInputStream fis = new FileInputStream(f);
 
-				int rowNumber = 0;
-				Iterator<Row> iterator = sheet.iterator();
+            @SuppressWarnings("resource")
+            XSSFWorkbook excelWorkbook = new XSSFWorkbook(is);
+            XSSFSheet excelSheet = excelWorkbook.getSheetAt(0);
 
-				while (iterator.hasNext()) {
-					Row row = iterator.next();
-					//System.out.println(row);
+            int rows = excelSheet.getPhysicalNumberOfRows();
+            int cols = excelSheet.getRow(0).getPhysicalNumberOfCells();
+            String matriz[][] = new String[rows][cols];
+            XSSFCell cell;
 
-					if (rowNumber == 0) {
-						rowNumber++;
-						continue;
+            for (int i = 1; i < 2; i++) {
+                // Archivo original
+                // for (int i = 1; i < rows; i++) {
+                for (int j = 2; j < cols; j++) {
 
-					}
+                    cell = excelSheet.getRow(i).getCell(j);
+                    if (cell != null) {
+                        DataFormatter formatter = new DataFormatter();
+                        String cellContents = formatter.formatCellValue(cell);
+                        matriz[i][j] = cellContents;
+                        //System.out.println(matriz[i][j]);
+                    }
+                    
+                    if (j == 2) {
 
-					Iterator<Cell> cells = row.iterator();
+                        String filial = (matriz[i][j]);
+                        if (filial != null) {
+                            base = "";
+                            // System.out.println("La filial es: " + filial);
 
-					int i = 0;
+                            switch (filial) {
 
-					Altas p = new Altas();
+                                case "60":
+                                    base = "SIFOSOSDEMETRO";
+                                    break;
+                                case "11":
+                                    base = "SIFOSOSDEMENDOZA";
+                                    break;
+                                case "2":
+                                    base = "SIFOSOSDECORDOBA";
+                                    break;
+                                default:
+                                    base = "SIFOSOSDENACIONAL";
+                                    break;
 
-					while (cells.hasNext()) {
-						Cell cell = cells.next();
-
-						switch (i) {
-						
-						case 0:
-							p.setAltasId((int) cell.getNumericCellValue());
-							break;
-						case 1:
-							p.setNombre(cell.getStringCellValue());
-							break;
-						case 2:
-							p.setApellido(cell.getStringCellValue());
-							break;
-						case 3:
-							p.setCuit((int)cell.getNumericCellValue());
-							break;
-						default:
-							break;
-						}
-						System.out.println(cell);
-
-						i++;
-
-					}
-
-					list.add(p);
-
-				}
-			}
+                            }
+                            System.out.println("Corresponde a: " + base);
+                }
+            }
+            
+                }
+            }
+			 //bloque try
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,5 +105,7 @@ public class Helper {
 		return list;
 
 	}
-
+	
+	
+	
 }

@@ -26,11 +26,11 @@ public class AltasController {
 
             this.altasService.save(file);
 
-            return ResponseEntity.ok(Map.of("message", "File is uploaded and data is saved to db"));
+            return ResponseEntity.ok(Map.of("message", "Archivo subido correctamente"));
 
 
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please upload excel file ");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Por favor cargue el archivo con formato Excel");
     }
 
 

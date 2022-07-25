@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("*")
 public class AltasController {
 
     @Autowired
     private AltasService altasService;
-
-    @PostMapping("/excel/upload")
+    
+   
+    @PostMapping("/upload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
         if (Helper.checkExcelFormat(file)) {
             //true
@@ -42,5 +42,5 @@ public class AltasController {
 }
 
 
-//http://localhost:8080/excel/upload (POST)
+//http://localhost:8080/upload (POST)
 //http://localhost:8080/excel (GET)
